@@ -27,7 +27,6 @@ def load_database():
 
 class DatabaseConn(object):
     def __init__(self):
-        print(DB_FILE_PATH)
         self.db_conn = sqlite3.connect(DB_FILE_PATH)
 
     def __enter__(self):

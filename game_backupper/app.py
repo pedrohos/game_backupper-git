@@ -1,6 +1,7 @@
-import sys
+from game_backupper.frontend import Frontend
 
 
 def run():
     # Use a breakpoint in the code line below to debug your script.
-    print("Test")  # Press Ctrl+F8 to toggle the breakpoint.
+    print("Running application.")  # Press Ctrl+F8 to toggle the breakpoint.
+    Frontend()

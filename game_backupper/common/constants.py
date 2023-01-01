@@ -6,7 +6,7 @@ BACKUP_VALID_FILENAME_REGEX_PATTERN = "[0-9]{8}-[0-9]{6}"
 DB_ACTIVATE_FOREIGN_KEY = "PRAGMA foreign_keys = ON"
 
 # Settings
-SETTINGS_DEFAULT_BACKUP_PATH = "C:/GameBackupper/Backups"
+SETTINGS_DEFAULT_BACKUP_PATH = "/Users/pedrohos/GameBackupper/Backups"
 
 # Exceptions
 # Settings
@@ -30,7 +30,7 @@ DB_GENERATION_SQL_PATH = "./resources/db_generation.sql"
 
 DB_FETCH_GAMES_SQL = "SELECT * FROM Game"
 DB_GET_GAME_ID_SQL = "SELECT idGame FROM Game WHERE name = ?"
-DB_ADD_GAME_SQL = "INSERT INTO Game(name, saveRootPath, backupPath) VALUES (?, ?, ?, ?)"
+DB_ADD_GAME_SQL = "INSERT INTO Game(name, saveRootPath, backupPath) VALUES (?, ?, ?)"
 DB_UPDATE_GAME_SQL = "UPDATE Game SET name = ?, saveRootPath = ?, backupPath = ? WHERE idGame = ?"
 DB_DELETE_GAME_SQL = "DELETE from Game WHERE idGame = ?"
 
@@ -48,13 +48,11 @@ CREATE TABLE IF NOT EXISTS `Game` (
   `idGame` INTEGER PRIMARY KEY AUTOINCREMENT,
   `name` TEXT NOT NULL,
   `saveRootPath` TEXT NOT NULL,
-  `backupPath` TEXT NULL,
-  PRIMARY KEY (`idGame`),
-  UNIQUE INDEX `idGame_UNIQUE` (`idGame` ASC) VISIBLE,
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE,
-  UNIQUE INDEX `savePath_UNIQUE` (`saveRootPath` ASC) VISIBLE,
-  UNIQUE INDEX `backupPath_UNIQUE` (`backupPath` ASC) VISIBLE)
-ENGINE = InnoDB;
+  `backupPath` TEXT NULL);
+CREATE UNIQUE INDEX `idGame_UNIQUE_idx` ON Game (`idGame`);
+CREATE UNIQUE INDEX `name_UNIQUE_idx` ON Game (`name`);
+CREATE UNIQUE INDEX `savePath_UNIQUE_idx` ON Game (`saveRootPath`);
+CREATE UNIQUE INDEX `backupPath_UNIQUE_idx` ON Game (`backupPath`);
 
 
 -- -----------------------------------------------------
@@ -66,11 +64,9 @@ CREATE TABLE IF NOT EXISTS `Backup` (
   `idSave` INTEGER PRIMARY KEY AUTOINCREMENT,
   `backupTime` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `fkIdGame` INTEGER NOT NULL,
-  INDEX `fk_Backup_Game_idx` (`fkIdGame` ASC) VISIBLE,
-  CONSTRAINT `fk_Backup_Game`
     FOREIGN KEY (`fkIdGame`)
-    REFERENCES `mydb`.`Game` (`idGame`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    REFERENCES Game (`idGame`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
+CREATE UNIQUE INDEX `fk_Backup_Game_idx` ON Backup (`fkIdGame`);
 """
